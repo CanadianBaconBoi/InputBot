@@ -242,10 +242,10 @@ impl From<u64> for KeybdKey {
             0x1008FF15 => MediaStopKey,
             0x1008FF14 => MediaPlayPauseKey,
             0x29 => BackquoteKey,
-            0x35 => SlashKey,
+            //0x35 => SlashKey, note(useless as caught by earlier)
             0x2B => BackslashKey,
-            0x33 => CommaKey,
-            0x34 => PeriodKey,
+            //0x33 => CommaKey, note(useless as caught by earlier)
+            //0x34 => PeriodKey, note(useless as caught by earlier)
             0x0C => MinusKey,
             0x28 => QuoteKey,
             0x27 => SemicolonKey,
@@ -335,15 +335,15 @@ pub fn scan_code_to_key(scan_code: u32) -> Option<KeybdKey> {
         0x2D => Some(XKey),
         0x15 => Some(YKey),
         0x2C => Some(ZKey),
-        0x52 => Some(Numpad0Key),
+        //0x52 => Some(Numpad0Key), note(useless as caught by earlier)
         0x4F => Some(Numpad1Key),
-        0x50 => Some(Numpad2Key),
+        // 0x50 => Some(Numpad2Key), note(useless as caught by earlier)
         0x51 => Some(Numpad3Key),
-        0x4B => Some(Numpad4Key),
+        // 0x4B => Some(Numpad4Key), note(useless as caught by earlier)
         0x4C => Some(Numpad5Key),
-        0x4D => Some(Numpad6Key),
-        0x47 => Some(Numpad7Key),
-        0x48 => Some(Numpad8Key),
+        // 0x4D => Some(Numpad6Key), note(useless as caught by earlier)
+        // 0x47 => Some(Numpad7Key), note(useless as caught by earlier)
+        // 0x48 => Some(Numpad8Key), note(useless as caught by earlier)
         0x49 => Some(Numpad9Key),
         0x3B => Some(F1Key),
         0x3C => Some(F2Key),
@@ -473,14 +473,14 @@ impl From<MouseButton> for uinput::event::controller::Mouse {
     fn from(button: MouseButton) -> Self {
         use uinput::event::controller::Mouse;
         match button {
-            MouseButton::LeftButton => Mouse::Left,
-            MouseButton::RightButton => Mouse::Right,
-            MouseButton::MiddleButton => Mouse::Middle,
-            MouseButton::MousewheelDown => unimplemented!(),
-            MouseButton::MousewheelUp => unimplemented!(),
-            MouseButton::X1Button => unimplemented!(),
-            MouseButton::X2Button => unimplemented!(),
-            MouseButton::OtherButton(_) => unimplemented!(),
+            LeftButton => Mouse::Left,
+            RightButton => Mouse::Right,
+            MiddleButton => Mouse::Middle,
+            MousewheelDown => unimplemented!(),
+            MousewheelUp => unimplemented!(),
+            X1Button => unimplemented!(),
+            X2Button => unimplemented!(),
+            OtherButton(_) => unimplemented!(),
         }
     }
 }

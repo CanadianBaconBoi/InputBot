@@ -11,9 +11,12 @@ pub enum Bind {
     Normal(Handler),
     #[cfg(target_os = "windows")]
     Release(Handler),
+    #[allow(dead_code)]
     Block(BlockHandler),
+    #[allow(dead_code)]
     Blockable(BlockableHandler),
 }
+
 
 pub type Handler = Arc<dyn Fn() + Send + Sync + 'static>;
 pub type BlockHandler = Arc<dyn Fn() + Send + Sync + 'static>;

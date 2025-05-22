@@ -1,6 +1,6 @@
 use crate::common::*;
 use std::{thread::sleep, time::Duration};
-
+use enum_map::Enum;
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
@@ -8,7 +8,6 @@ use strum_macros::EnumIter;
 use regex::Regex;
 #[cfg(feature = "serde")]
 use serde::{
-    de::{Deserializer, Error},
     Deserialize, Serialize,
 };
 #[cfg(feature = "serde")]
@@ -91,9 +90,7 @@ fn mouse_canonical_names_lower() -> &'static HashMap<String, MouseButton> {
     })
 }
 
-#[derive(Debug, Eq, PartialEq, Hash, Copy, Clone, EnumIter)]
-#[cfg_attr(feature = "serde", derive(Serialize))]
-
+#[derive(Debug, Eq, PartialEq, Hash, Copy, Clone, Enum, EnumIter, Serialize, Deserialize)]
 pub enum KeybdKey {
     BackspaceKey,
     TabKey,
@@ -221,8 +218,7 @@ pub enum KeybdKey {
     OtherKey(u64),
 }
 
-#[derive(Debug, Eq, PartialEq, Hash, Copy, Clone, EnumIter)]
-#[cfg_attr(feature = "serde", derive(Serialize))]
+#[derive(Debug, Eq, PartialEq, Hash, Copy, Clone, EnumIter, Serialize, Deserialize)]
 pub enum MouseButton {
     LeftButton,
     MiddleButton,
@@ -238,6 +234,10 @@ pub enum MouseButton {
 pub struct MouseCursor;
 
 pub struct MouseWheel;
+
+pub trait BindableInput<> {
+    
+}
 
 impl KeybdKey {
     pub fn bind<F: Fn() + Send + Sync + 'static>(self, callback: F) {
@@ -504,16 +504,16 @@ impl std::str::FromStr for KeybdKey {
     }
 }
 
-#[cfg(feature = "serde")]
-impl<'de> Deserialize<'de> for KeybdKey {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let s = String::deserialize(deserializer)?;
-        std::str::FromStr::from_str(&s).map_err(Error::custom)
-    }
-}
+// #[cfg(feature = "serde")]
+// impl<'de> Deserialize<'de> for KeybdKey {
+//     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+//     where
+//         D: Deserializer<'de>,
+//     {
+//         let s = String::deserialize(deserializer)?;
+//         std::str::FromStr::from_str(&s).map_err(Error::custom)
+//     }
+// }
 
 impl MouseButton {
     pub fn bind<F: Fn() + Send + Sync + 'static>(self, callback: F) {
@@ -598,7 +598,7 @@ impl std::fmt::Display for MouseButton {
                 MouseButton::RightButton => "RightClick",
                 MouseButton::X1Button => "MouseBackward",
                 MouseButton::X2Button => "MouseForward",
-                MouseButton::OtherButton(code) => return write!(f, "MouseButton({code})"),
+                MouseButton::OtherButton (code) => return write!(f, "MouseButton({code})"),
                 MouseButton::MousewheelDown => "MousewheelDown",
                 MouseButton::MousewheelUp => "MousewheelUp",
             }
@@ -628,16 +628,16 @@ impl std::str::FromStr for MouseButton {
     }
 }
 
-#[cfg(feature = "serde")]
-impl<'de> Deserialize<'de> for MouseButton {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let s = String::deserialize(deserializer)?;
-        std::str::FromStr::from_str(&s).map_err(Error::custom)
-    }
-}
+// #[cfg(feature = "serde")]
+// impl<'de> Deserialize<'de> for MouseButton {
+//     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+//     where
+//         D: Deserializer<'de>,
+//     {
+//         let s = String::deserialize(deserializer)?;
+//         std::str::FromStr::from_str(&s).map_err(Error::custom)
+//     }
+// }
 
 pub fn from_keybd_key(k: KeybdKey) -> Option<char> {
     match k {
@@ -818,7 +818,7 @@ mod tests {
 
         let other_key_string = KeybdKey::OtherKey(42).to_string();
         let other_key = KeybdKey::from_str(&other_key_string)?;
-        assert!(other_key == KeybdKey::OtherKey(42));
+        assert_eq!(other_key, KeybdKey::OtherKey(42));
 
         let serialized_mouse: Vec<String> = MouseButton::iter().map(|b| b.to_string()).collect();
         let deserialized_mouse: HashSet<MouseButton> = serialized_mouse
@@ -830,7 +830,7 @@ mod tests {
         }
         let other_mouse_string = MouseButton::OtherButton(42).to_string();
         let other_mouse = MouseButton::from_str(&other_mouse_string)?;
-        assert!(other_mouse == MouseButton::OtherButton(42));
+        assert_eq!(other_mouse, MouseButton::OtherButton(42));
         Ok(())
     }
 
@@ -853,7 +853,7 @@ mod tests {
 
         let other_key_string = KeybdKey::OtherKey(42).canonical_name();
         let other_key = KeybdKey::from_str(&other_key_string)?;
-        assert!(other_key == KeybdKey::OtherKey(42));
+        assert_eq!(other_key, KeybdKey::OtherKey(42));
 
         let serialized_mouse: Vec<String> =
             MouseButton::iter().map(|b| b.canonical_name()).collect();
@@ -867,7 +867,7 @@ mod tests {
 
         let other_mouse_string = MouseButton::OtherButton(42).canonical_name();
         let other_mouse = MouseButton::from_str(&other_mouse_string)?;
-        assert!(other_mouse == MouseButton::OtherButton(42));
+        assert_eq!(other_mouse, MouseButton::OtherButton(42));
         Ok(())
     }
 

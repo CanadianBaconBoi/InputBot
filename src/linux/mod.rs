@@ -20,7 +20,7 @@ use std::{
     os::fd::{FromRawFd, IntoRawFd, OwnedFd},
     path::Path,
     ptr::null,
-    sync::atomic::{AtomicBool, Ordering},
+    sync::atomic::{Ordering},
     sync::Mutex,
     thread::sleep,
     time::Duration,
@@ -188,30 +188,6 @@ impl MouseCursor {
     }
 }
 
-impl MouseWheel {
-    /// Scrolls the mouse wheel vertically by a given amount.
-    pub fn scroll_ver(y: i32) {
-        if y < 0 {
-            MouseButton::OtherButton(4).press();
-            MouseButton::OtherButton(4).release();
-        } else {
-            MouseButton::OtherButton(5).press();
-            MouseButton::OtherButton(5).release();
-        }
-    }
-
-    /// Scrolls the mouse wheel horizontally by a given amount.
-    pub fn scroll_hor(x: i32) {
-        if x < 0 {
-            MouseButton::OtherButton(6).press();
-            MouseButton::OtherButton(6).release();
-        } else {
-            MouseButton::OtherButton(7).press();
-            MouseButton::OtherButton(7).release();
-        }
-    }
-}
-
 struct LibinputInterfaceRaw;
 
 impl LibinputInterfaceRaw {
@@ -221,7 +197,7 @@ impl LibinputInterfaceRaw {
 }
 
 impl LibinputInterface for LibinputInterfaceRaw {
-    fn open_restricted(&mut self, path: &Path, flags: i32) -> std::result::Result<OwnedFd, i32> {
+    fn open_restricted(&mut self, path: &Path, flags: i32) -> Result<OwnedFd, i32> {
         if let Ok(fd) = open(path, OFlag::from_bits_truncate(flags), Mode::empty()) {
             Ok(unsafe { OwnedFd::from_raw_fd(fd) })
         } else {

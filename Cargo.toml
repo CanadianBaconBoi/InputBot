@@ -19,6 +19,7 @@ once_cell = "1.18.0"
 thiserror = { version = "^1.0", optional = true }
 regex = { version = "^1.0", optional = true }
 serde = { version = "^1.0", optional = true,  features = ["derive"] }
+enum-map = { path = "../enum-map/enum-map", features = ["serde"] }
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.51.1", features = [
@@ -39,7 +40,3 @@ toml = { version = "^0.8" }
 
 [features]
 serde = ["dep:serde", "dep:regex", "dep:thiserror"]
-
-[[example]]
-name = "serde"
-required-features = ["serde"]
