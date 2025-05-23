@@ -20,7 +20,7 @@ use std::{
     os::fd::{FromRawFd, IntoRawFd, OwnedFd},
     path::Path,
     ptr::null,
-    sync::atomic::{Ordering},
+    sync::atomic::Ordering,
     sync::Mutex,
     thread::sleep,
     time::Duration,

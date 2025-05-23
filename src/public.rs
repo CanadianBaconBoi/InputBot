@@ -1,15 +1,13 @@
 use crate::common::*;
-use std::{thread::sleep, time::Duration};
 use enum_map::Enum;
+use std::{thread::sleep, time::Duration};
 use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 
 #[cfg(feature = "serde")]
 use regex::Regex;
 #[cfg(feature = "serde")]
-use serde::{
-    Deserialize, Serialize,
-};
+use serde::{Deserialize, Serialize};
 #[cfg(feature = "serde")]
 use thiserror::Error;
 
@@ -235,9 +233,7 @@ pub struct MouseCursor;
 
 pub struct MouseWheel;
 
-pub trait BindableInput<> {
-    
-}
+pub trait BindableInput {}
 
 impl KeybdKey {
     pub fn bind<F: Fn() + Send + Sync + 'static>(self, callback: F) {
@@ -598,7 +594,7 @@ impl std::fmt::Display for MouseButton {
                 MouseButton::RightButton => "RightClick",
                 MouseButton::X1Button => "MouseBackward",
                 MouseButton::X2Button => "MouseForward",
-                MouseButton::OtherButton (code) => return write!(f, "MouseButton({code})"),
+                MouseButton::OtherButton(code) => return write!(f, "MouseButton({code})"),
                 MouseButton::MousewheelDown => "MousewheelDown",
                 MouseButton::MousewheelUp => "MousewheelUp",
             }

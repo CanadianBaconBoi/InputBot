@@ -17,7 +17,6 @@ pub enum Bind {
     Blockable(BlockableHandler),
 }
 
-
 pub type Handler = Arc<dyn Fn() + Send + Sync + 'static>;
 pub type BlockHandler = Arc<dyn Fn() + Send + Sync + 'static>;
 pub type BlockableHandler = Arc<dyn Fn() -> BlockInput + Send + Sync + 'static>;
